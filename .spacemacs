@@ -38,7 +38,7 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      helm
-     ;; auto-completion
+     auto-completion
      ;; better-defaults
      emacs-lisp
      ;; git
@@ -56,13 +56,14 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
-                                      ddskk
+                                      auto-complete
+                                      rainbow-delimiters
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(
-                                    org-projectile 
+                                    org-projectile
                                     )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -92,7 +93,7 @@ values."
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    dotspacemacs-elpa-timeout 5
    ;; If non nil then spacemacs will check for updates at startup
-   ;; when the current branch is not `develop'. Note that checking for
+   ;; when the current branch is not `develop'. Note that chec@feror
    ;; new versions works via git commands, thus it calls GitHub services
    ;; whenever you start Emacs. (default nil)
    dotspacemacs-check-for-update nil
@@ -137,11 +138,11 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Myrica M"
-                               :size 13
+   dotspacemacs-default-font '("source"
+                               :size 14
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
@@ -183,7 +184,7 @@ values."
    dotspacemacs-display-default-layout nil
    ;; If non nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
@@ -202,7 +203,7 @@ values."
    dotspacemacs-helm-no-header nil
    ;; define the position to display `helm', options are `bottom', `top',
    ;; `left', or `right'. (default 'bottom)
-   dotspacemacs-helm-position 'bottom
+   dotspacemacs-helm-position 'left
    ;; Controls fuzzy matching in helm. If set to `always', force fuzzy matching
    ;; in all non-asynchronous sources. If set to `source', preserve individual
    ;; source settings. Else, disable fuzzy matching in all sources.
@@ -246,7 +247,7 @@ values."
    ;; If non nil show the color guide hint for transient state keys. (default t)
    dotspacemacs-show-transient-state-color-guide t
    ;; If non nil unicode symbols are displayed in the mode line. (default t)
-   dotspacemacs-mode-line-unicode-symbols t
+   dotspacemacs-mode-line-unicode-symbols nil
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
@@ -270,7 +271,7 @@ values."
    dotspacemacs-folding-method 'evil
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode nil
+   dotspacemacs-smartparens-strict-mode t
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc…
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
@@ -295,18 +296,19 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil
+   dotspacemacs-whitespace-cleanup `trailing
    ))
+
 
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init', before layer configuration
 executes.
- This function is mostly useful for variables that need to be set
+ This function is mostly useful for variables that need to be set3
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-
+jb
   )
 
 (defun dotspacemacs/user-config ()
@@ -318,33 +320,62 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
                                         ; 半角英字設定
-  (set-face-attribute 'default nil :family "Consolas" :height 100)
-                                        ; 全角かな設定
-  (set-fontset-font (frame-parameter nil 'font)
-                    'japanese-jisx0208
-                    (font-spec :family "IPAゴシック" :size 14))
+  (set-face-attribute 'default nil :family "consolas" :height 90)
+
                                         ; 半角ｶﾅ設定
   (set-fontset-font (frame-parameter nil 'font)
                     'katakana-jisx0201
-                    (font-spec :family "ＭＳ ゴシック" :size 14))
+                    (font-spec :family "NasuM" :size  14))
+
+                                        ; 全角かな設定
+  (set-fontset-font (frame-parameter nil 'font)
+                    'japanese-jisx0208
+                    (font-spec :family "NasuM" :size 14))
+
                                         ; ずれ確認用
+                                        ; abcdefghijklmnopqrstuvwxyzabcdefghijklmn
                                         ; 0123456789012345678901234567890123456789
                                         ; ｱｲｳｴｵｱｲｳｴｵｱｲｳｴｵｱｲｳｴｵｱｲｳｴｵｱｲｳｴｵｱｲｳｴｵｱｲｳｴｵ
                                         ; あいうえおあいうえおあいうえおあいうえお
-  (show-paren-mode 1)
+                                        ; 愛愛愛愛愛愛愛愛愛愛愛愛愛愛愛愛愛愛愛愛
 
-  )
+  (setq show-paren-mode t)
+  (setq show-paren-delay 0)
+  (setq show-paren-style 'expression)
+  (set-face-attribute 'show-paren-match-face nil
+                      :background nil :foreground nil
+                      :underline "#ffff00" :weight 'extra-bold)
 
-;; Do not write anything past this comment. This is where Emacs will
+  (setq-default rainbow-delimiters-mode t)
+  (setq rainbow-delimiters-outermost-only-face-count 1)
+
+  (set-face-foreground 'rainbow-delimiters-depth-1-face "#9a4040")
+  (set-face-foreground 'rainbow-delimiters-depth-2-face "#ff5e5e")
+  (set-face-foreground 'rainbow-delimiters-depth-3-face "#ffaa77")
+  (set-face-foreground 'rainbow-delimiters-depth-4-face "#dddd77")
+  (set-face-foreground 'rainbow-delimiters-depth-5-face "#80ee80")
+  (set-face-foreground 'rainbow-delimiters-depth-6-face "#66bbff")
+  (set-face-foreground 'rainbow-delimiters-depth-7-face "#da6bda")
+  (set-face-foreground 'rainbow-delimiters-depth-8-face "#afafaf")
+  (set-face-foreground 'rainbow-delimiters-depth-9-face "#f0f0f0")
+
+  (setq eww-search-prefix "https://www.google.co.jp/search?q=")
+
+)
+;; Dos not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(evil-want-Y-yank-to-eol nil)
+ '(org-indent-indentation-per-level 3)
  '(package-selected-packages
    (quote
-    (yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic ddskk cdb ccc org-projectile org-projectile-helm org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))))
+    (git commander yasnippet-classic-snippets cask package-build shut-up memoize helm-company helm-c-yasnippet company-statistics company-anaconda company auto-yasnippet yasnippet ac-ispell ede-php-autoload-composer-installers powerline spinner hydra parent-mode projectile pkg-info epl flx smartparens iedit anzu evil goto-chg undo-tree highlight bind-map bind-key packed f dash s helm avy helm-core async popup fuzzy auto-complete yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic ddskk cdb ccc org-projectile org-projectile-helm org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
