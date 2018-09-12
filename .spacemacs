@@ -58,6 +58,7 @@ values."
    dotspacemacs-additional-packages '(
                                       auto-complete
                                       rainbow-delimiters
+                                      show-paren
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -203,7 +204,7 @@ values."
    dotspacemacs-helm-no-header nil
    ;; define the position to display `helm', options are `bottom', `top',
    ;; `left', or `right'. (default 'bottom)
-   dotspacemacs-helm-position 'left
+   dotspacemacs-helm-position 'bottom
    ;; Controls fuzzy matching in helm. If set to `always', force fuzzy matching
    ;; in all non-asynchronous sources. If set to `source', preserve individual
    ;; source settings. Else, disable fuzzy matching in all sources.
@@ -308,7 +309,7 @@ executes.
  This function is mostly useful for variables that need to be set3
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-jb
+
   )
 
 (defun dotspacemacs/user-config ()
@@ -339,13 +340,19 @@ you should place your code here."
                                         ; あいうえおあいうえおあいうえおあいうえお
                                         ; 愛愛愛愛愛愛愛愛愛愛愛愛愛愛愛愛愛愛愛愛
 
-  (setq show-paren-mode t)
+
+  ;; deleteで領域削除
+  (setq delete-selection-mode t)
+
+  ;; 括弧内をハイライト http://syohex.hatenablog.com/entry/20110331/1301584188
+  (show-paren-mode 1)
   (setq show-paren-delay 0)
   (setq show-paren-style 'expression)
   (set-face-attribute 'show-paren-match-face nil
                       :background nil :foreground nil
                       :underline "#ffff00" :weight 'extra-bold)
 
+  ;; 括弧の深さをカラーコードで表す
   (setq-default rainbow-delimiters-mode t)
   (setq rainbow-delimiters-outermost-only-face-count 1)
 
@@ -359,9 +366,10 @@ you should place your code here."
   (set-face-foreground 'rainbow-delimiters-depth-8-face "#afafaf")
   (set-face-foreground 'rainbow-delimiters-depth-9-face "#f0f0f0")
 
+  ;; ewwのデフォルトのエンジンをgoogleに
   (setq eww-search-prefix "https://www.google.co.jp/search?q=")
 
-)
+  )
 ;; Dos not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (custom-set-variables
